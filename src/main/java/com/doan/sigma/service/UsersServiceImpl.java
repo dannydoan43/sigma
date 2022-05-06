@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.doan.sigma.dto.UsersDTO;
@@ -24,10 +27,12 @@ import com.doan.sigma.repository.UsersRepository;
 
 @Service
 @Transactional
-public class UsersServiceImpl implements UsersService{
+public class UsersServiceImpl implements UsersService,UserDetailsService{
 
 	@Autowired
 	private UsersRepository userRepo;
+//	@Autowired
+//	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	@Transactional(readOnly=true)
@@ -46,11 +51,19 @@ public class UsersServiceImpl implements UsersService{
 	}
 	
 	@Override
-	public String findByUsername(String username) throws SubException{
+	public UsersDTO findByUsername(String username) throws SubException{
 		Optional<Users> userOptional = userRepo.findByUsername(username);
 		Users user = userOptional.orElseThrow(()->new SubException("could not find user with username"));
-//		System.out.println("TESTING FUNCTION IN CLIENT: " + user.getEmail());
-		return user.getEmail();
+		UsersDTO userDTO = new UsersDTO();
+		
+		userDTO.setEmail(user.getEmail());
+		userDTO.setDescription(user.getDescription());
+		userDTO.setFirstName(user.getFirstName());
+		userDTO.setLastName(user.getLastName());
+		userDTO.setPassword((user.getPassword()));
+		userDTO.setUsername(user.getUsername());
+
+		return userDTO;
 	}
 	
 	@Override
@@ -72,6 +85,8 @@ public class UsersServiceImpl implements UsersService{
 		userDTO.setPassword(user.getPassword());
 		userDTO.setUsername(user.getUsername());
 		userDTO.setComments(user.getComments());
+		userDTO.setFollowers(user.getFollowers());
+		userDTO.setFollowing(user.getFollowing());
 //		System.out.println("THIS IS OUTSIDE POSTS: ");
 //		for(Posts post : user.getPosts()) {
 //			System.out.println("THIS IS INSIDE POSTS: " + post.getUsersEmail() + " " + post.getText());
@@ -119,19 +134,28 @@ public class UsersServiceImpl implements UsersService{
 		return foundEmail;
 	}
 
-	@Override
+	@Override	//if you want to change string, you ahve to remove responsetype:text from userservice api on client
 	public String updateUser(UsersDTO userDTO) throws SubException {		//dont need @pathvar id if DTO has right validations
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		System.out.println("this is userDTO emial : " + userDTO.getEmail());
-		Users user = userRepo.findById(userDTO.getEmail().toLowerCase()).orElseThrow(()->new SubException("unable to update by email"));
+//		Users user = userRepo.findById(userDTO.getEmail().toLowerCase()).orElseThrow(()->new SubException("unable to update by email"));
+		Users user = userRepo.findByUsername(userDTO.getUsername()).orElseThrow(()->new SubException("unable to find by username to update"));
 		user.setDescription(userDTO.getDescription());
 		//user.setEmail(userDTO.getEmail().toLowerCase());
 //		user.setFirstLastName(userDTO.getFirstLastName());
+//		user.setEnabled(user.isEnabled());
+//		user.setFollowersCount(user.getFollowersCount());
+//		user.setLoginAt(user.getLoginAt());
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
-		user.setFollowersCount(userDTO.getFollowersCount());
+//		user.setFollowersCount(userDTO.getFollowersCount());
 //		user.setFriendsCount(userDTO.getFriendsCount());
-		user.setEnabled(false);
-		user.setPassword(userDTO.getPassword());	//look at postsupdate
+//		user.setEnabled(false);
+		if(encoder.matches(userDTO.getPassword(), user.getPassword()) || userDTO.getPassword().equals(user.getPassword())) {
+			user.setPassword(user.getPassword());
+		} else {
+			user.setPassword(encoder.encode(userDTO.getPassword()));	//just added in encoder
+		}
 		user.setUsername(userDTO.getUsername());
 		//user.setPosts(userDTO.getPosts());   		//added this line..no need to set posts to null cause we are updating user info
 		//include posts
@@ -151,7 +175,8 @@ public class UsersServiceImpl implements UsersService{
 		
 		//userRepo.save(user);		//do i need this? does updating user change all emails?
 		//probably incldue hashing in update
-		return "updated user: " + user.getEmail().toLowerCase();
+//		return userDTO;
+		return "updated user " + user.getUsername();
 	}
 
 }

@@ -40,9 +40,11 @@ public class CommentsServiceImpl implements CommentsService{
 //		commentToAdd.setCommentsId(commentsDTO.getCommentsId());
 		commentToAdd.setId(commentsDTO.getId());
 		commentToAdd.setPostsId(commentsDTO.getPostsId());
-		commentToAdd.setUsersEmail(commentsDTO.getUsersEmail());
+//		commentToAdd.setUsersEmail(commentsDTO.getUsersEmail());
+		commentToAdd.setUsername(commentsDTO.getUsername());
+
 		commentToAdd.setMessage(commentsDTO.getMessage());
-		commentToAdd.setOwner(commentsDTO.getOwner());
+//		commentToAdd.setOwner(commentsDTO.getOwner());
 		
 		commentsRepo.save(commentToAdd);
 		currentComments.add(commentToAdd);
@@ -105,7 +107,9 @@ public class CommentsServiceImpl implements CommentsService{
 	@Override
 	public List<CommentsDTO> getCommentsByOwner(String email) throws SubException {	//Integer commentId to String email
 //		Users user = usersRepo.findById(email.toLowerCase()).orElseThrow(()->new SubException("no user with that email"));	//do i even need this?
-		List<Comments> currentComments  = commentsRepo.findByUsersEmail(email);
+//		List<Comments> currentComments  = commentsRepo.findByUsersEmail(email);
+		List<Comments> currentComments  = commentsRepo.findByUsername(email);
+
 		List<CommentsDTO> commentsDTO = new ArrayList<CommentsDTO>();
 		
 		for(Comments c : currentComments) {
@@ -113,10 +117,12 @@ public class CommentsServiceImpl implements CommentsService{
 //			cDTO.setCommentsId(c.getCommentsId());
 			cDTO.setId(c.getId());
 			cDTO.setPostsId(c.getPostsId());
-			cDTO.setUsersEmail(c.getUsersEmail());
+//			cDTO.setUsersEmail(c.getUsersEmail());
+			cDTO.setUsername(c.getUsername());
+
 			cDTO.setCreatedAt(c.getCreatedAt());
 			cDTO.setMessage(c.getMessage());
-			cDTO.setOwner(c.getOwner());
+//			cDTO.setOwner(c.getOwner());
 
 			commentsDTO.add(cDTO);
 		}
@@ -171,10 +177,12 @@ public class CommentsServiceImpl implements CommentsService{
 //			commentsDTO.setCommentsId(comment.getCommentsId());
 			commentsDTO.setId(comment.getId());
 			commentsDTO.setPostsId(comment.getPostsId());
-			commentsDTO.setUsersEmail(comment.getUsersEmail());
+//			commentsDTO.setUsersEmail(comment.getUsersEmail());
+			commentsDTO.setUsername(comment.getUsername());
+
 			commentsDTO.setCreatedAt(comment.getCreatedAt());
 			commentsDTO.setMessage(comment.getMessage());
-			commentsDTO.setOwner(comment.getOwner());
+//			commentsDTO.setOwner(comment.getOwner());
 
 			//add posts?
 			commentsDTOs.add(commentsDTO);

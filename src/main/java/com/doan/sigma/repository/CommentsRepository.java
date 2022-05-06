@@ -11,7 +11,7 @@ import com.doan.sigma.entity.Comments;
 @Repository
 public interface CommentsRepository extends CrudRepository<Comments,Integer> {
 	
-	List<Comments> findByUsersEmail(@Param("usersEmail") String usersEmail);
+	List<Comments> findByUsername(@Param("username") String username);
 	
 	//@Query("SELECT c FROM Comments as C WHERE c.commentsId.postsId = :postsId")
 	List<Comments> findByPostsId(@Param("postsId") Integer postsId);

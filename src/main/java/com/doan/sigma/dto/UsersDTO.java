@@ -10,7 +10,9 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import com.doan.sigma.entity.Comments;
+import com.doan.sigma.entity.Followers;
 import com.doan.sigma.entity.Posts;
+import com.doan.sigma.entity.Users;
 //going to have to add setComments(getComments()) in the get requests
 
 //added @notempty
@@ -24,10 +26,9 @@ public class UsersDTO {
 	@Size(min=0,max=44)
 	private String description;
 	@NotNull
-	private int followersCount;
+	private int followersCount;		//maybe set default to 0
 	private boolean enabled;
-//	@NotNull
-//	private int friendsCount;
+
 	//@Pattern(regexp="/^[a-z ,.'-]+$/i")
 	//@Size(min=0,max=44)
 //	private String firstLastName;
@@ -44,6 +45,8 @@ public class UsersDTO {
 	
 	private List<Posts> posts;
 	private List<Comments> comments;
+	private List<Users> followers;
+	private List<Users> following;
 	
 	public String getEmail() {
 		return email;
@@ -69,18 +72,6 @@ public class UsersDTO {
 	public void setFollowersCount(int followersCount) {
 		this.followersCount = followersCount;
 	}
-//	public int getFriendsCount() {
-//		return friendsCount;
-//	}
-//	public void setFriendsCount(int friendsCount) {
-//		this.friendsCount = friendsCount;
-//	}
-//	public String getFirstLastName() {
-//		return firstLastName;
-//	}
-//	public void setFirstLastName(String firstLastName) {
-//		this.firstLastName = firstLastName;
-//	}
 	public Date getLoginAt() {
 		return loginAt;
 	}
@@ -128,5 +119,17 @@ public class UsersDTO {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public List<Users> getFollowers() {
+		return followers;
+	}
+	public void setFollowers(List<Users> followers) {
+		this.followers = followers;
+	}
+	public List<Users> getFollowing() {
+		return following;
+	}
+	public void setFollowing(List<Users> following) {
+		this.following = following;
 	}
 }

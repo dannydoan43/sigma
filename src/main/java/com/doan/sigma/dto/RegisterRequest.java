@@ -11,8 +11,6 @@ public class RegisterRequest {	//this is a DTO
 	private String username;
 	@NotNull
 	private String password;
-//	@NotNull
-//	private String firstLastName;
 	@NotNull
 	private String firstName;
 	@NotNull
@@ -36,12 +34,7 @@ public class RegisterRequest {	//this is a DTO
 	public void setPassword(String password) {
 		this.password = password;
 	}
-//	public String getFirstLastName() {
-//		return firstLastName;
-//	}
-//	public void setFirstLastName(String firstLastName) {
-//		this.firstLastName = firstLastName;
-//	}
+
 	public String getFirstName() {
 		return firstName;
 	}

@@ -12,7 +12,7 @@ import com.doan.sigma.exception.SubException;
 public interface UsersService {
 	public List<Users> getAll() throws SubException;
 	public UsersDTO findByUsersEmail(String email) throws SubException;
-	public String findByUsername(String username) throws SubException;
+	public UsersDTO findByUsername(String username) throws SubException;
 	public String addUser(UsersDTO userDTO) throws SubException;
 	public String deleteUser(String email) throws SubException;
 	public String updateUser(UsersDTO userDTO) throws SubException;

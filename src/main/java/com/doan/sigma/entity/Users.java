@@ -1,5 +1,6 @@
 package com.doan.sigma.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -17,12 +21,18 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Table(name="users")
 @Entity
-public class Users {
-	//add in setEnabled?
-	//changed id to email
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties({ "followers","following","posts","comments" })	
+public class Users implements Serializable {
+
 	@Id
 	@Column(name="email")
 	private String email;
@@ -35,15 +45,10 @@ public class Users {
 	private String description;
 	@Column(name="followers_count")
 	private int followersCount;
-//	
-//	@Column(name="friends_count")
-//	private int friendsCount;
-//	
+
 	@Column(name="enabled")
 	private boolean enabled;
 	
-//	@Column(name="first_last_name")	//commenting out getters and setters 
-//	private String firstLastName;
 	@Column(name="first_name")
 	private String firstName;
 	@Column(name="last_name")
@@ -57,30 +62,53 @@ public class Users {
 	private String password;
 	@Column(name="username")
 	private String username;
-	
-	@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)		//joincolumn is slower performance, but mappedBy is a bidirectional relationship
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//	@JoinColumn(name="users_username")
+							//commenting out mappedby=usersemail on posts and comments
+	//@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)		//joincolumn is slower performance, but mappedBy is a bidirectional relationship
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name="users_username",referencedColumnName="username")
+	@JsonManagedReference
 	private List<Posts> posts;	//@JsonManagedReference
 	
-	@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)	//swapped to joiincolumn test
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//	@JoinColumn(name="users_username",referencedColumnName="username")			//i thionk it might be this
+//	@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)	//swapped to joiincolumn test
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name="users_username",referencedColumnName="username")			//i thionk it might be this
 	private List<Comments> comments;
-//	@OneToMany(cascade=CascadeType.ALL,orphanRemoval = true)		//changed from line 58 to 55
-//	@JoinColumn(name="users_email")
-//	private List<Posts> posts;
 	
+//followersid.users_email?
+	//joincolumnS?
+	//onetomany mappedby=followerisid?
+	//do i need a list of followers for the users?...can i not just call the association table?
+//	@JoinTable(
+//	        name = "users_has_followers",
+//	        joinColumns = {@JoinColumn(
+//	                name = "users_email"
+////	                referencedColumnName = "email"
+//	        ),@JoinColumn(name="followers_email")}
+////	        inverseJoinColumns = @JoinColumn(
+////	                name = "followers_email"
+////	                referencedColumnName = "email"
+////	        )
+//	)
+	//does flipping these values give the following?
+	@JoinTable(name="users_has_followers",
+			joinColumns= {@JoinColumn(name="users_email",insertable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name="followers_email",insertable = false, updatable = false)})
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Users> followers;
+	//changed from list<followers> to users
+	@JoinTable(name="users_has_followers",
+			joinColumns= {@JoinColumn(name="followers_email",insertable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name="users_email",insertable = false, updatable = false)})	//woorking version is changing to list<users>
+	@ManyToMany(cascade = CascadeType.ALL)
+//	@JsonManagedReference
+	private List<Users> following;
+	//how to get rid of the infinite loops?
+	
+//	public void addFollowerTo(Users user) {
+//		followers.add(user);
+//		user.setEmail(this.email);
+//	}
 
-	public void addPost(Posts post) {
-		posts.add(post);
-		post.setUsersEmail(this.email);
-	}
-	public void deletePost(Posts post) {
-		posts.remove(post);
-		post.setUsersEmail(null);
-	}
-	
 	public String getEmail() {
 		return email;
 	}
@@ -112,22 +140,6 @@ public class Users {
 	public void setFollowersCount(int followersCount) {
 		this.followersCount = followersCount;
 	}
-
-//	public int getFriendsCount() {
-//		return friendsCount;
-//	}
-//
-//	public void setFriendsCount(int friendsCount) {
-//		this.friendsCount = friendsCount;
-//	}
-
-//	public String getFirstLastName() {
-//		return firstLastName;
-//	}
-//
-//	public void setFirstLastName(String firstLastName) {
-//		this.firstLastName = firstLastName;
-//	}
 
 	public Date getLoginAt() {
 		return loginAt;
@@ -187,22 +199,21 @@ public class Users {
 		this.lastName = lastName;
 	}
 
-//	public List<Followers> getFollowed() {			//changed from followers to users
-//		return followed;
-//	}
-//
-//	public void setFollowed(List<Followers> followed) {
-//		this.followed = followed;
-//	}
+	public List<Users> getFollowers() {
+		return followers;
+	}
 
-//	public List<Users> getFollowers() {
-//		return followers;
-//	}
-//
-//	public void setFollowers(List<Users> followers) {
-//		this.followers = followers;
-//	}
+	public void setFollowers(List<Users> followers) {
+		this.followers = followers;
+	}
 
-	
+	public List<Users> getFollowing() {
+		return following;
+	}
+
+	public void setFollowing(List<Users> following) {
+		this.following = following;
+	}
+
 	
 }

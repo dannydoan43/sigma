@@ -39,9 +39,9 @@ public class CommentsAPI {
 		return new ResponseEntity<List<CommentsDTO>>(commentsService.getCommentsByPostId(postsId),HttpStatus.OK);
 	}
 	
-	@GetMapping("/getO/{email}")
-	ResponseEntity<List<CommentsDTO>> getCommentsByOwner(@PathVariable String email) throws SubException {	
-		return new ResponseEntity<List<CommentsDTO>>(commentsService.getCommentsByOwner(email),HttpStatus.OK);
+	@GetMapping("/getUser/{username}")
+	ResponseEntity<List<CommentsDTO>> getCommentsByUsername(@PathVariable String username) throws SubException {	
+		return new ResponseEntity<List<CommentsDTO>>(commentsService.getCommentsByOwner(username),HttpStatus.OK);
 	}
 	
 	@PostMapping("/addC")	//removed postsid from add

@@ -19,10 +19,13 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Table(name="posts")
 @Entity
 public class Posts {
 //removing owner from entity and dto ---- changing users_email to users_username 
+	//changing usersEmail to username
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -41,43 +44,24 @@ public class Posts {
 	@Column(name="text")
 	private String text;
 		//the only thing i did was go from users_email to users_username and change column to joincolumn with manytoone
-	@Column(name="users_email")
+	@Column(name="users_username")
 //	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Users.class)		//just added this line
-	private String usersEmail;			//might have to change this to users user? danny??? @manytoone @joincolumn(name="username", referencedColumnName="users_username")
+	private String username;			//might have to change this to users user? danny??? @manytoone @joincolumn(name="username", referencedColumnName="users_username")
 	//giving a reference to users would expose the email!!!!!!!!!!!!!!!!!!!!
 	
 	
 	
 	@Column(name="title")
 	private String title;
-							
-	@Column(name="owner")
-	private String owner;
-//	
-	
-//	@ManyToOne
-//	@JoinColumn(name="users_email",nullable=false)
-//	@JsonBackReference
-//	private Users user;			//connected to Users line 59?	changed String users_email to Users user
 
 	@OneToMany(mappedBy="postsId",cascade = CascadeType.ALL, orphanRemoval = true)
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//	@JoinColumn(name="posts_id")
+	@JsonBackReference
 	private List<Comments> comments;		//its this line
 	
 	//constructor?
 	public Posts() {
 		super();
 	}
-	
-//	public void addComment(Comments comment) {
-//		comments.add(comment);
-//		comment.setPostsId(this.id);
-//	}
-//	public void deleteComment(Comments comment) {
-//		comments.remove(comment);
-//		comment.setPostsId(null);
-//	}
 	
 	public Integer getId() {
 		return id;
@@ -119,14 +103,6 @@ public class Posts {
 		this.text = text;
 	}
 
-//	public String getUsers_email() {
-//		return users_email;
-//	}
-//
-//	public void setUsers_email(String users_email) {
-//		this.users_email = users_email;
-//	}
-
 	public List<Comments> getComments() {
 		return comments;
 	}
@@ -134,23 +110,7 @@ public class Posts {
 	public void setComments(List<Comments> comments) {
 		this.comments = comments;
 	}
-//
-//	public PostsId getPostsId() {
-//		return postsId;
-//	}
-//
-//	public void setPostsId(PostsId postsId) {
-//		this.postsId = postsId;
-//	}
-
-	public String getUsersEmail() {
-		return usersEmail;
-	}
-
-	public void setUsersEmail(String usersEmail) {
-		this.usersEmail = usersEmail;
-	}
-
+	
 	public String getTitle() {
 		return title;
 	}
@@ -159,29 +119,12 @@ public class Posts {
 		this.title = title;
 	}
 
-	public String getOwner() {
-		return owner;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-
-//	public Users getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(Users user) {
-//		this.user = user;
-//	}
-
-//	public Users getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(Users user) {
-//		this.user = user;
-//	}
-	
 	
 }

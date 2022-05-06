@@ -38,9 +38,10 @@ public class PostsServiceImpl implements PostsService {
 			dto.setLikeCount(post.getLikeCount());
 			dto.setLiked(post.isLiked());
 			dto.setText(post.getText());
-			dto.setUsersEmail(post.getUsersEmail());
+//			dto.setUsersEmail(post.getUsersEmail());
+			dto.setUsername(post.getUsername());
 			dto.setTitle(post.getTitle());
-			dto.setOwner(post.getOwner());
+//			dto.setOwner(post.getOwner());
 			postDTOs.add(dto);
 		}
 		return postDTOs;
@@ -53,9 +54,11 @@ public class PostsServiceImpl implements PostsService {
 		post.setLikeCount(postDTO.getLikeCount());
 		post.setLiked(postDTO.isLiked());
 		post.setText(postDTO.getText());
-		post.setUsersEmail(postDTO.getUsersEmail());
+//		post.setUsersEmail(postDTO.getUsersEmail());
+		post.setUsername(postDTO.getUsername());
+
 		post.setTitle(postDTO.getTitle());
-		post.setOwner(postDTO.getOwner());
+//		post.setOwner(postDTO.getOwner());
 //		List<Comments> currentComments = post.getComments();
 		
 		PostsDTO returnPost = new PostsDTO();
@@ -65,9 +68,11 @@ public class PostsServiceImpl implements PostsService {
 		returnPost.setLiked(post.isLiked());
 		returnPost.setText(post.getText());
 		returnPost.setComments(post.getComments());
-		returnPost.setUsersEmail(post.getUsersEmail());
+//		returnPost.setUsersEmail(post.getUsersEmail());
+		returnPost.setUsername(post.getUsername());
+
 		returnPost.setTitle(post.getTitle());
-		returnPost.setOwner(post.getOwner());
+//		returnPost.setOwner(post.getOwner());
 		return returnPost; 
 		
 //		Posts post = postsRepo.findById(postDTO.getId()).orElseThrow(()->new SubException("could not find post with id to update"));
@@ -115,9 +120,11 @@ public class PostsServiceImpl implements PostsService {
 		postDTO.setLiked(post.isLiked());
 		postDTO.setText(post.getText());
 		postDTO.setComments(post.getComments());
-		postDTO.setUsersEmail(post.getUsersEmail());
+//		postDTO.setUsersEmail(post.getUsersEmail());
+		postDTO.setUsername(post.getUsername());
+
 		postDTO.setTitle(post.getTitle());
-		postDTO.setOwner(post.getOwner());
+//		postDTO.setOwner(post.getOwner());
 		postsRepo.delete(post);
 		return postDTO;
 //		Posts post = postsRepo.findById(postId).orElseThrow(()->new SubException("could not find post with id to delete"));
@@ -137,7 +144,8 @@ public class PostsServiceImpl implements PostsService {
 	@Override
 	public Integer addPost(PostsDTO postDTO) throws SubException {
 		//System.out.println("THIS IS EMAIL INSIDE POSTDTO : " + postDTO.getPostsId().getUsersEmail());
-		Users user = userRepo.findById(postDTO.getUsersEmail().toLowerCase()).orElseThrow(()->new SubException("user not found to add post"));
+//		Users user = userRepo.findById(postDTO.getUsersEmail().toLowerCase()).orElseThrow(()->new SubException("user not found to add post"));
+		Users user = userRepo.findByUsername(postDTO.getUsername()).orElseThrow(()->new SubException("user not found to add post"));
 		//Users user = userRepo.findByUsername(postDTO.getUsersEmail()).orElseThrow(()->new SubException("user not found to add post"));
 		List<Posts> currentPosts = user.getPosts();
 		Posts postToAdd = new Posts();
@@ -145,9 +153,11 @@ public class PostsServiceImpl implements PostsService {
 		postToAdd.setLikeCount(postDTO.getLikeCount());
 		postToAdd.setLiked(postDTO.isLiked());
 		postToAdd.setText(postDTO.getText());
-		postToAdd.setUsersEmail(postDTO.getUsersEmail());
+//		postToAdd.setUsersEmail(postDTO.getUsersEmail());
+		postToAdd.setUsername(postDTO.getUsername());
+
 		postToAdd.setTitle(postDTO.getTitle());
-		postToAdd.setOwner(postDTO.getOwner());
+//		postToAdd.setOwner(postDTO.getOwner());
 //		postToAdd.setPostsId(postDTO.getPostsId());
 		//maybe just add in a String username to posts and comments?
 		postsRepo.save(postToAdd);
@@ -187,7 +197,24 @@ public class PostsServiceImpl implements PostsService {
 //		//might have to delete the liked boolean...? makes more sense to include another many-to-many table for liked_by
 //		return "increased likes count by 1, it is now " + post.getLikeCount();
 	}
-	
+	public List<PostsDTO> getPostsByUsername(String username) throws SubException {
+		List<Posts> posts = postsRepo.findByUsername(username);
+		List<PostsDTO> returnList = new ArrayList<PostsDTO>();
+		for(Posts p : posts) {
+			PostsDTO postDTO = new PostsDTO();
+			postDTO.setCreatedAt(p.getCreatedAt());
+			postDTO.setId(p.getId());
+			postDTO.setLikeCount(p.getLikeCount());
+			postDTO.setLiked(p.isLiked());
+			postDTO.setText(p.getText());
+			postDTO.setUsername(p.getUsername());
+			postDTO.setTitle(p.getTitle());
+//			postDTO.setComments(p.getComments());		//do i need comments?...no because i am going to be loading them seperately?
+			returnList.add(postDTO);
+		}
+		return returnList;
+	}
+	//probably remove this method...no longer using email as an id
 	public List<PostsDTO> getPostsByUser_email(String email) throws SubException {
 		Users user = userRepo.findById(email.toLowerCase()).orElseThrow(()->new SubException("could not find post by email"));
 		List<PostsDTO> postList = new ArrayList<>();
@@ -204,9 +231,11 @@ public class PostsServiceImpl implements PostsService {
 			postDTO.setLikeCount(p.getLikeCount());
 			postDTO.setLiked(p.isLiked());
 			postDTO.setText(p.getText());
-			postDTO.setUsersEmail(p.getUsersEmail());
+//			postDTO.setUsersEmail(p.getUsersEmail());
+			postDTO.setUsername(p.getUsername());
+
 			postDTO.setTitle(p.getTitle());
-			postDTO.setOwner(p.getOwner());
+//			postDTO.setOwner(p.getOwner());
 			//postDTO.setUsers_email(p.getUsers_email());	//it is correctly setting postDTO
 //			postDTO.setUser(p.getUser());
 			postDTO.setComments(p.getComments());
@@ -226,9 +255,11 @@ public class PostsServiceImpl implements PostsService {
 		postDTO.setLiked(post.isLiked());
 		postDTO.setText(post.getText());
 		postDTO.setComments(post.getComments());
-		postDTO.setUsersEmail(post.getUsersEmail());
+//		postDTO.setUsersEmail(post.getUsersEmail());
+		postDTO.setUsername(post.getUsername());
+
 		postDTO.setTitle(post.getTitle());
-		postDTO.setOwner(post.getOwner());
+//		postDTO.setOwner(post.getOwner());
 		return postDTO;
 //		Posts post = postsRepo.findById(id).orElseThrow(()->new SubException("unable to find post by id"));
 //		

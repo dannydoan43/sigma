@@ -82,7 +82,7 @@ public class FollowersServiceImpl implements FollowersService{
 		Followers f = followersRepo.findById(newId).orElseThrow(()->new SubException("relationship not found to delete"));
 		userOne.setFollowersCount(userOne.getFollowersCount()-1);
 		//userTwo.setFollowingCount(blah);
-		usersRepo.save(userOne);
+		usersRepo.save(userOne);		
 		followersRepo.delete(f);
 		return "removed " + id.getFollowersId().getFollowers_email() + " as a follower of " + id.getFollowersId().getUsers_email();
 	}
@@ -98,9 +98,9 @@ public class FollowersServiceImpl implements FollowersService{
 		newId.setFollowers_email(userTwo.getEmail().toLowerCase());
 		newId.setUsers_email(userOne.getEmail().toLowerCase());
 		f.setFollowersId(newId);
-		f.setUserOne(userOne);			//do i need this? i already have a way to get Users through the emailId
-		f.setUserTwo(userTwo);
-		
+//		f.setUserOne(userOne);			//do i need this? i already have a way to get Users through the emailId
+//		f.setUserTwo(userTwo);	//usersRepo.setFollowers(
+		//userOne.addFollowerTo(userOne); something like this when u sober
 		boolean relationshipExists = followersRepo.findById(newId).isEmpty();
 		if(!relationshipExists)
 			throw new SubException("usertwo already follows userone");	

@@ -27,10 +27,10 @@ public class PostsDTO {
 	@Size(min=0,max=99)
 	private String text;
 	
-	private String usersEmail;
+	private String username;
 	//private Users user;
 	private String title;
-	private String owner;
+//	private String owner;
 
 	private List<Comments> comments;
 
@@ -74,44 +74,12 @@ public class PostsDTO {
 		this.text = text;
 	}
 
-//	public String getUsers_email() {
-//		return users_email;
-//	}
-//
-//	public void setUsers_email(String users_email) {
-//		this.users_email = users_email;
-//	}
-
 	public List<Comments> getComments() {
 		return comments;
 	}
 
 	public void setComments(List<Comments> comments) {
 		this.comments = comments;
-	}
-//
-//	public Users getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(Users user) {
-//		this.user = user;
-//	}
-//
-//	public PostsId getPostsId() {
-//		return postsId;
-//	}
-//
-//	public void setPostsId(PostsId postsId) {
-//		this.postsId = postsId;
-//	}
-
-	public String getUsersEmail() {
-		return usersEmail;
-	}
-
-	public void setUsersEmail(String usersEmail) {
-		this.usersEmail = usersEmail;
 	}
 
 	public String getTitle() {
@@ -122,12 +90,12 @@ public class PostsDTO {
 		this.title = title;
 	}
 
-	public String getOwner() {
-		return owner;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

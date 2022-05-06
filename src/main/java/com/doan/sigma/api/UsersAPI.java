@@ -37,8 +37,8 @@ public class UsersAPI {
 	private UsersServiceImpl userService;
 	
 	@GetMapping("u/{username}")
-	ResponseEntity<String> findByUsername(@PathVariable String username) throws SubException {
-		return new ResponseEntity<String>(userService.findByUsername(username),HttpStatus.OK);
+	ResponseEntity<UsersDTO> findByUsername(@PathVariable String username) throws SubException {
+		return new ResponseEntity<UsersDTO>(userService.findByUsername(username),HttpStatus.OK);
 	}
 	@GetMapping("e/{email}")
 	ResponseEntity<UsersDTO> findByUsersEmail(@PathVariable String email) throws SubException{

@@ -29,9 +29,9 @@ public class Comments {
 	//@ManyToOne(fetch = FetchType.LAZY, targetEntity = Posts.class)	//needs target entity because i do not have type posts post but just the id
 	private Integer postsId;
 	//this user is the user who commented
-	@Column(name="users_email")
+	@Column(name="users_username")
 	//@ManyToOne(fetch = FetchType.LAZY, targetEntity = Users.class)		//do not need this?
-	private String usersEmail;
+	private String username;
 	
 	@Column(name="message")
 	private String message;
@@ -40,32 +40,10 @@ public class Comments {
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
 	private Date createdAt;
-//	
-	@Column(name="owner")
-	private String owner;
-//	@Column(name="posts_id")
-////	private Integer postsId;
-//	@ManyToOne
-//	@JoinColumn(name="users_email")
-//	//@JoinColumn(name="i",referencedColumnName="")
-//	private Posts post;
-//	@ManyToOne
-//	@JoinColumn(name="posts_id",nullable=false)
-//	@JsonBackReference
-//	private Posts post;
-	//comments have a user?
-	//constructor?
+
 	public Comments() {
 		super();
 	}
-//	
-//	public Integer getId() {
-//		return id;
-//	}
-//
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
 
 	public String getMessage() {
 		return message;
@@ -99,43 +77,12 @@ public class Comments {
 		this.postsId = postsId;
 	}
 
-	public String getUsersEmail() {
-		return usersEmail;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUsersEmail(String usersEmail) {
-		this.usersEmail = usersEmail;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-//	public Posts getPost() {
-//		return post;
-//	}
-//
-//	public void setPost(Posts post) {
-//		this.post = post;
-//	}
-
-//	public CommentsId getCommentsId() {
-//		return commentsId;
-//	}
-//
-//	public void setCommentsId(CommentsId commentsId) {
-//		this.commentsId = commentsId;
-//	}
-
-//	public Integer getPostId() {
-//		return postsId;
-//	}
-//
-//	public void setPostId(Integer postId) {
-//		this.postsId = postId;
-//	}
 }

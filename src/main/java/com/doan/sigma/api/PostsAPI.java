@@ -40,6 +40,11 @@ public class PostsAPI {
 		return new ResponseEntity<List<PostsDTO>>(postsService.getAllPosts(),HttpStatus.OK);
 	}
 	
+	@GetMapping("/getUser/{username}")
+	ResponseEntity<List<PostsDTO>> getPostsByUsername(@PathVariable String username) throws SubException {
+		return new ResponseEntity<List<PostsDTO>>(postsService.getPostsByUsername(username),HttpStatus.OK);
+	}
+	
 	@GetMapping("/{email}")
 	ResponseEntity<List<PostsDTO>> getPostsByUser_email(@PathVariable String email) throws SubException {
 		return new ResponseEntity<List<PostsDTO>>(postsService.getPostsByUser_email(email),HttpStatus.OK);
@@ -50,7 +55,7 @@ public class PostsAPI {
 		return new ResponseEntity<PostsDTO>(postsService.updatePost(postDTO),HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/deletep/{postId}")
+	@DeleteMapping("/delete/{postId}")
 	ResponseEntity<PostsDTO> deletePost(@PathVariable Integer postId) throws SubException {
 		return new ResponseEntity<PostsDTO>(postsService.deletePost(postId),HttpStatus.OK);
 	}

@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.doan.sigma.utility.FollowersId;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="users_has_followers")
@@ -15,21 +17,21 @@ public class Followers {
 	private FollowersId followersId;
 	//now can do findByIdFollowerEmail or findByIdUsersEmail
 	//do i need these Users?
-	@ManyToOne
-	@JoinColumn(name="users_email", insertable=false, updatable=false)
-	private Users userOne;
-	
-	@ManyToOne
-	@JoinColumn(name="followers_email",insertable=false, updatable=false)
-	private Users userTwo;
+//	@ManyToOne
+//	@JoinColumn(name="users_email", insertable=false, updatable=false)
+//	private Users userOne;
+//	
+//	@ManyToOne
+//	@JoinColumn(name="followers_email",insertable=false, updatable=false)
+//	private Users userTwo;
 	
 	public Followers() {
     }
 	
 	public Followers(FollowersId followersId,Users userOne, Users userTwo) {
 		this.followersId = followersId;
-		this.userOne = userTwo;
-		this.userTwo = userOne;
+//		this.userOne = userTwo;
+//		this.userTwo = userOne;
 		
 		//do i need this?
 //		userOne.getFollowers().add(this);
@@ -44,19 +46,4 @@ public class Followers {
 		this.followersId = followers;
 	}
 
-	public Users getUserOne() {
-		return userOne;
-	}
-
-	public void setUserOne(Users userOne) {
-		this.userOne = userOne;
-	}
-
-	public Users getUserTwo() {
-		return userTwo;
-	}
-
-	public void setUserTwo(Users userTwo) {
-		this.userTwo = userTwo;
-	}
 }
