@@ -3,9 +3,9 @@ package com.doan.sigma.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-public class RegisterRequest {	//this is a DTO
+public class RegisterRequest {
 	@Email
-	@NotNull	//change to notempty
+	@NotNull
 	private String email;
 	@NotNull
 	private String username;

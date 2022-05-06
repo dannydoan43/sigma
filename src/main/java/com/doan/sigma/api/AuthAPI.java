@@ -27,14 +27,14 @@ import com.doan.sigma.service.RefreshTokenService;
 @RestController
 @RequestMapping("/api/auth")
 @Validated
-@CrossOrigin	//if your program breaks its because you addewd validated and co
+@CrossOrigin
 public class AuthAPI {
 
 	@Autowired
 	private AuthService authService;
 	@Autowired
 	private RefreshTokenService refreshTokenService;
-		//probably very users on signup for testing purposes
+
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) throws SubException{
 		return new ResponseEntity<String>(authService.signup(registerRequest),HttpStatus.CREATED);
@@ -56,7 +56,7 @@ public class AuthAPI {
 		return authService.refreshToken(refreshTokenRequest);
 	}
 	
-	@PostMapping("/logout")	//why does logout need a token?
+	@PostMapping("/logout")
 	public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) throws SubException {
 		refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());	//look at this
 		return new ResponseEntity<String>("successfully logged out",HttpStatus.OK);

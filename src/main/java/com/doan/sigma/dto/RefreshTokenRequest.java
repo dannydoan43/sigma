@@ -2,7 +2,7 @@ package com.doan.sigma.dto;
 
 import javax.validation.constraints.NotBlank;
 
-public class RefreshTokenRequest {	//DTO
+public class RefreshTokenRequest {
 	@NotBlank
 	private String refreshToken;
 	private String username;

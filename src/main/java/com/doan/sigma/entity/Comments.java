@@ -19,18 +19,15 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table
 @Entity
 public class Comments {
-	//changing users_email to users_username and removing owner from comments entity and dto
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
-	private Integer id;			//what to do here,.....how to get this to autogenerate a value?
+	private Integer id;
 	
-	@Column(name="posts_id")	//changed column to joincolumn 
-	//@ManyToOne(fetch = FetchType.LAZY, targetEntity = Posts.class)	//needs target entity because i do not have type posts post but just the id
+	@Column(name="posts_id")
 	private Integer postsId;
-	//this user is the user who commented
+	
 	@Column(name="users_username")
-	//@ManyToOne(fetch = FetchType.LAZY, targetEntity = Users.class)		//do not need this?
 	private String username;
 	
 	@Column(name="message")

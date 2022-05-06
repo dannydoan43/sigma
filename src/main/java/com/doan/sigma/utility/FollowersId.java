@@ -12,7 +12,7 @@ public class FollowersId implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;	//might wanna delete this
+	private static final long serialVersionUID = 1L;
 	@Column(name="users_email")			
 	private String users_email;
 	@Column(name="followers_email")
@@ -42,7 +42,6 @@ public class FollowersId implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-//just added these two
 	@Override
 	public int hashCode() {
 		return Objects.hash(followers_email, users_email);

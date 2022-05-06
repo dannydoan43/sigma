@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-//need to add this to SQL table....
 @Entity
 @Table(name="refreshtoken")
 public class RefreshToken {

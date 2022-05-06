@@ -23,7 +23,6 @@ import com.doan.sigma.entity.Posts;
 import com.doan.sigma.entity.Users;
 import com.doan.sigma.exception.SubException;
 import com.doan.sigma.repository.UsersRepository;
-//import com.doan.sigma.utility.HashingUtility;
 
 @Service
 @Transactional
@@ -31,16 +30,14 @@ public class UsersServiceImpl implements UsersService,UserDetailsService{
 
 	@Autowired
 	private UsersRepository userRepo;
-//	@Autowired
-//	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Users> userOptional = userRepo.findByUsername(username);	//users to user
+		Optional<Users> userOptional = userRepo.findByUsername(username);
 		Users user = userOptional.orElseThrow(()->new UsernameNotFoundException("could not find user with username"));
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),user.isEnabled(),true,true,true,getAuthorities("USER"));
-	}//39:00
+	}
 	private Collection<? extends GrantedAuthority> getAuthorities(String role) {
 		return Collections.singletonList(new SimpleGrantedAuthority(role));
 	}
@@ -76,9 +73,7 @@ public class UsersServiceImpl implements UsersService,UserDetailsService{
 		userDTO.setCreatedAt(user.getCreatedAt());
 		userDTO.setDescription(user.getDescription());
 		userDTO.setFollowersCount(user.getFollowersCount());
-//		userDTO.setFriendsCount(user.getFriendsCount());
 		userDTO.setEnabled(false);
-//		userDTO.setFirstLastName(user.getFirstLastName());
 		userDTO.setFirstName(user.getFirstName());
 		userDTO.setLastName(user.getLastName());
 		userDTO.setLoginAt(user.getLoginAt());
@@ -87,18 +82,13 @@ public class UsersServiceImpl implements UsersService,UserDetailsService{
 		userDTO.setComments(user.getComments());
 		userDTO.setFollowers(user.getFollowers());
 		userDTO.setFollowing(user.getFollowing());
-//		System.out.println("THIS IS OUTSIDE POSTS: ");
-//		for(Posts post : user.getPosts()) {
-//			System.out.println("THIS IS INSIDE POSTS: " + post.getUsersEmail() + " " + post.getText());
-//		}
-		//need to do posts
 		userDTO.setPosts(user.getPosts());
 		return userDTO;
 	}
 
 	@Override
-	public String addUser(UsersDTO userDTO) throws SubException {	//might wanna change string to void
-		boolean emailAvail = userRepo.findById(userDTO.getEmail().toLowerCase()).isEmpty();		//maybe wanna add a phone number?
+	public String addUser(UsersDTO userDTO) throws SubException {
+		boolean emailAvail = userRepo.findById(userDTO.getEmail().toLowerCase()).isEmpty();
 		String emailAdded = null;
 		if(emailAvail) {
 			Users user = new Users();
@@ -106,17 +96,11 @@ public class UsersServiceImpl implements UsersService,UserDetailsService{
 			user.setCreatedAt(userDTO.getCreatedAt());
 			user.setDescription(userDTO.getDescription());
 			user.setFollowersCount(userDTO.getFollowersCount());
-			//user.setFriendsCount(userDTO.getFriendsCount());
-			//no need to set enabled from DTO because i am not giving it? instead give it default value of false?
 			user.setEnabled(false);
-//			user.setFirstLastName(userDTO.getFirstLastName());
 			user.setFirstName(userDTO.getFirstName());
 			user.setLastName(userDTO.getLastName());
 			user.setLoginAt(userDTO.getLoginAt());
 			String hashedpwd = null;
-//			try {
-//				hashedpwd = HashingUtility.getHashValue(userDTO.getPassword());			//any point in having this if signup uses passwordEncoder()
-//			} catch (NoSuchAlgorithmException e) {}
 			user.setPassword(hashedpwd);
 			user.setUsername(userDTO.getUsername());
 			userRepo.save(user);
@@ -126,56 +110,27 @@ public class UsersServiceImpl implements UsersService,UserDetailsService{
 	}
 
 	@Override
-	public String deleteUser(String email) throws SubException {	//when deleting a user make sure to remove him from followers/followed
+	public String deleteUser(String email) throws SubException {
 		Users user = new Users();
-		user = userRepo.findById(email.toLowerCase()).orElseThrow(()->new SubException("unable to delete by email"));	//change this message
+		user = userRepo.findById(email.toLowerCase()).orElseThrow(()->new SubException("unable to delete by email"));
 		userRepo.delete(user);
 		String foundEmail = "deleted account associated with: " + email;
 		return foundEmail;
 	}
 
-	@Override	//if you want to change string, you ahve to remove responsetype:text from userservice api on client
-	public String updateUser(UsersDTO userDTO) throws SubException {		//dont need @pathvar id if DTO has right validations
+	@Override
+	public String updateUser(UsersDTO userDTO) throws SubException {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		System.out.println("this is userDTO emial : " + userDTO.getEmail());
-//		Users user = userRepo.findById(userDTO.getEmail().toLowerCase()).orElseThrow(()->new SubException("unable to update by email"));
 		Users user = userRepo.findByUsername(userDTO.getUsername()).orElseThrow(()->new SubException("unable to find by username to update"));
-		user.setDescription(userDTO.getDescription());
-		//user.setEmail(userDTO.getEmail().toLowerCase());
-//		user.setFirstLastName(userDTO.getFirstLastName());
-//		user.setEnabled(user.isEnabled());
-//		user.setFollowersCount(user.getFollowersCount());
-//		user.setLoginAt(user.getLoginAt());
-		user.setFirstName(userDTO.getFirstName());
+		user.setDescription(userDTO.getDescription());		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
-//		user.setFollowersCount(userDTO.getFollowersCount());
-//		user.setFriendsCount(userDTO.getFriendsCount());
-//		user.setEnabled(false);
 		if(encoder.matches(userDTO.getPassword(), user.getPassword()) || userDTO.getPassword().equals(user.getPassword())) {
 			user.setPassword(user.getPassword());
 		} else {
-			user.setPassword(encoder.encode(userDTO.getPassword()));	//just added in encoder
+			user.setPassword(encoder.encode(userDTO.getPassword()));
 		}
 		user.setUsername(userDTO.getUsername());
-		//user.setPosts(userDTO.getPosts());   		//added this line..no need to set posts to null cause we are updating user info
-		//include posts
-//		List<Posts> postsList = new ArrayList<Posts>();		//i dont think i need to do all of this...
-//		for(Posts post : user.getPosts()) {
-//			Posts p = postsRepo.findById(post.getId()).orElseThrow(()-> new SubException("could not find posts in updateuser"));
-//			p.setComments(post.getComments());
-//			p.setCreatedAt(post.getCreatedAt());
-//			p.setId(post.getId());
-//			p.setLikeCount(post.getLikeCount());
-//			p.setLiked(post.isLiked());
-//			p.setText(post.getText());
-//			//p.setUsers_email(userDTO.getEmail());
-//			p.setUser(user);		//think its this
-//			postsList.add(p);
-//		}
-		
-		//userRepo.save(user);		//do i need this? does updating user change all emails?
-		//probably incldue hashing in update
-//		return userDTO;
 		return "updated user " + user.getUsername();
 	}
 

@@ -62,52 +62,27 @@ public class Users implements Serializable {
 	private String password;
 	@Column(name="username")
 	private String username;
-							//commenting out mappedby=usersemail on posts and comments
-	//@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)		//joincolumn is slower performance, but mappedBy is a bidirectional relationship
+							
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="users_username",referencedColumnName="username")
 	@JsonManagedReference
-	private List<Posts> posts;	//@JsonManagedReference
+	private List<Posts> posts;
 	
-//	@OneToMany(mappedBy="usersEmail",cascade = CascadeType.ALL, orphanRemoval = true)	//swapped to joiincolumn test
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="users_username",referencedColumnName="username")			//i thionk it might be this
+	@JoinColumn(name="users_username",referencedColumnName="username")
 	private List<Comments> comments;
 	
-//followersid.users_email?
-	//joincolumnS?
-	//onetomany mappedby=followerisid?
-	//do i need a list of followers for the users?...can i not just call the association table?
-//	@JoinTable(
-//	        name = "users_has_followers",
-//	        joinColumns = {@JoinColumn(
-//	                name = "users_email"
-////	                referencedColumnName = "email"
-//	        ),@JoinColumn(name="followers_email")}
-////	        inverseJoinColumns = @JoinColumn(
-////	                name = "followers_email"
-////	                referencedColumnName = "email"
-////	        )
-//	)
-	//does flipping these values give the following?
 	@JoinTable(name="users_has_followers",
 			joinColumns= {@JoinColumn(name="users_email",insertable = false, updatable = false)},
 			inverseJoinColumns = {@JoinColumn(name="followers_email",insertable = false, updatable = false)})
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Users> followers;
-	//changed from list<followers> to users
+	
 	@JoinTable(name="users_has_followers",
 			joinColumns= {@JoinColumn(name="followers_email",insertable = false, updatable = false)},
-			inverseJoinColumns = {@JoinColumn(name="users_email",insertable = false, updatable = false)})	//woorking version is changing to list<users>
+			inverseJoinColumns = {@JoinColumn(name="users_email",insertable = false, updatable = false)})
 	@ManyToMany(cascade = CascadeType.ALL)
-//	@JsonManagedReference
 	private List<Users> following;
-	//how to get rid of the infinite loops?
-	
-//	public void addFollowerTo(Users user) {
-//		followers.add(user);
-//		user.setEmail(this.email);
-//	}
 
 	public String getEmail() {
 		return email;

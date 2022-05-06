@@ -18,20 +18,20 @@ public class RefreshTokenService {
 	
 	@Autowired
 	private RefreshTokenRepository refreshTokenRepo;
-	//give refreshtoken a expiration date
+	
 	public RefreshToken generateRefreshToken() {
 		RefreshToken refreshToken = new RefreshToken();
-		refreshToken.setCreatedDate(Instant.now());	//can probably just use @CreationTimeStamp
+		refreshToken.setCreatedDate(Instant.now());	//can also use @CreationTimeStamp
 		refreshToken.setToken(UUID.randomUUID().toString());
-		RefreshToken returnVal = refreshTokenRepo.save(refreshToken);	//id should be autogen
+		RefreshToken returnVal = refreshTokenRepo.save(refreshToken);
 		return returnVal;
 	}
-	//refresh token should delete when getting a new one
-	public void validateRefreshToken(String token) throws SubException {	//make this private or public?
+	
+	public void validateRefreshToken(String token) throws SubException {
 		refreshTokenRepo.findByToken(token).orElseThrow(()-> new SubException("invalid refresh token"));
 	}
 
-	public void deleteRefreshToken(String token) throws SubException {	//does not actually log a person out...
+	public void deleteRefreshToken(String token) throws SubException {
 		refreshTokenRepo.findByToken(token).orElseThrow(()-> new SubException("invalid refresh token"));
 		refreshTokenRepo.deleteByToken(token);
 	}

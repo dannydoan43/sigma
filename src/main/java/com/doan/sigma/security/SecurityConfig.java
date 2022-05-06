@@ -42,10 +42,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private UserDetailsService userDetailsService;		//danny when you arent high change this type to impl and see if it still  wokrs
-	
-//	@Autowired
-//	private JwtAuthenticationFilter jwtAuthenticationFilter;	no need for this anymore because it is handled by oauth
+	private UserDetailsService userDetailsService;
 	
 	@Autowired
 	private JwtProvider jwtProvider;
@@ -58,13 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.cors().and().csrf().disable()	//can disable because using statless and jwt
+//		http.cors().and().csrf().disable()
 //			.authorizeRequests()
 //			.antMatchers("/api/auth/**")
 //			.permitAll()
 //			.anyRequest()
 //			.authenticated();
-//		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);	//this was before java had implemented oauth2ResourceServer
 		http.cors().and()
           .csrf().disable()
           .authorizeHttpRequests(authorize -> authorize
@@ -81,9 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 	}
 
-	//@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());			//ITS HERE
+		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
 	@Override
@@ -102,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	JwtEncoder jwtEncoder() throws SubException {
-		JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(jwtProvider.getPrivateKey()).build();	//sketchy
+		JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(jwtProvider.getPrivateKey()).build();
 		JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
 		return new NimbusJwtEncoder(jwks);
 	}

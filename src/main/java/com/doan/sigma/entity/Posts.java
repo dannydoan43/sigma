@@ -24,8 +24,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name="posts")
 @Entity
 public class Posts {
-//removing owner from entity and dto ---- changing users_email to users_username 
-	//changing usersEmail to username
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -43,20 +42,16 @@ public class Posts {
 	
 	@Column(name="text")
 	private String text;
-		//the only thing i did was go from users_email to users_username and change column to joincolumn with manytoone
+	
 	@Column(name="users_username")
-//	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Users.class)		//just added this line
-	private String username;			//might have to change this to users user? danny??? @manytoone @joincolumn(name="username", referencedColumnName="users_username")
-	//giving a reference to users would expose the email!!!!!!!!!!!!!!!!!!!!
-	
-	
+	private String username;
 	
 	@Column(name="title")
 	private String title;
 
 	@OneToMany(mappedBy="postsId",cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonBackReference
-	private List<Comments> comments;		//its this line
+	private List<Comments> comments;
 	
 	//constructor?
 	public Posts() {

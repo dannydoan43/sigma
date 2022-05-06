@@ -60,7 +60,7 @@ public class PostsAPI {
 		return new ResponseEntity<PostsDTO>(postsService.deletePost(postId),HttpStatus.OK);
 	}
 	
-	@PostMapping("/add")	//removed email from add API (service classes too)
+	@PostMapping("/add")
 	ResponseEntity<Integer> addPosts(@Valid @RequestBody PostsDTO postDTO) throws SubException {
 		return new ResponseEntity<Integer>(postsService.addPost( postDTO),HttpStatus.CREATED);
 	}

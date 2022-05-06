@@ -25,11 +25,10 @@ import com.doan.sigma.exception.SubException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-//45:00 at freecodecamp
 @Service
 public class JwtProvider {
 	
-	private KeyStore keyStore;	//do i need to autowire this? probably not cause he doesnt have final on his
+	private KeyStore keyStore;
 	@Value("${jwt.expiration.time}")
 	private Long jwtExpirationInMillis;
 	
@@ -45,21 +44,16 @@ public class JwtProvider {
 	}
 
 	public String generateToken(Authentication auth) throws SubException{
-		User principal = (User) auth.getPrincipal();	//44:33 is imporatnt codecamp in case this fails
+		User principal = (User) auth.getPrincipal();
 		return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
                 .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
-//		return Jwts.builder()		//what the fuck was the difference?
-//				.setSubject(principal.getUsername())
-//				.setIssuedAt(Date.from(Instant.now()))
-//				.signWith(getPrivateKey())
-//				.setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)));		haha difference was u had a semicolon here
-//				.compact();
 	}
-	//somewhere in generateToken .claim("scope","ROLE_USER"
+	
+	//somewhere in generateToken .claim("scope","ROLE_USER")
     public String generateTokenWithUserName(String username) throws SubException{
         return Jwts.builder()
                 .setSubject(username)
@@ -69,7 +63,7 @@ public class JwtProvider {
                 .compact();
     }
 
-	public PrivateKey getPrivateKey() throws SubException{	//private to public
+	public PrivateKey getPrivateKey() throws SubException{	
 		try {
 			return (PrivateKey) keyStore.getKey("subkey", "mapled".toCharArray());
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
@@ -79,7 +73,7 @@ public class JwtProvider {
 	
 	public PublicKey getPublicKey() throws SubException {
 		try {
-			return keyStore.getCertificate("subkey").getPublicKey();	//alias not key name (no .jks)
+			return keyStore.getCertificate("subkey").getPublicKey();
 		} catch (KeyStoreException e) {
 			throw new SubException("error occured getting public key from keystore");
 		}
@@ -96,6 +90,6 @@ public class JwtProvider {
 	}
 
 	public long getJwtExpirationInMillis() {
-		return jwtExpirationInMillis;		//was returning 0
+		return jwtExpirationInMillis;
 	}
 }

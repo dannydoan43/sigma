@@ -15,27 +15,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class Followers {
 	@EmbeddedId
 	private FollowersId followersId;
-	//now can do findByIdFollowerEmail or findByIdUsersEmail
-	//do i need these Users?
-//	@ManyToOne
-//	@JoinColumn(name="users_email", insertable=false, updatable=false)
-//	private Users userOne;
-//	
-//	@ManyToOne
-//	@JoinColumn(name="followers_email",insertable=false, updatable=false)
-//	private Users userTwo;
-	
 	public Followers() {
     }
 	
 	public Followers(FollowersId followersId,Users userOne, Users userTwo) {
 		this.followersId = followersId;
-//		this.userOne = userTwo;
-//		this.userTwo = userOne;
-		
-		//do i need this?
-//		userOne.getFollowers().add(this);
-//		userTwo.getFollowed().add(this);
 	}
 
 	public FollowersId getFollowersId() {

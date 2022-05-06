@@ -13,9 +13,7 @@ import com.doan.sigma.entity.Comments;
 import com.doan.sigma.entity.Followers;
 import com.doan.sigma.entity.Posts;
 import com.doan.sigma.entity.Users;
-//going to have to add setComments(getComments()) in the get requests
 
-//added @notempty
 public class UsersDTO {
 	@Email
 	@NotNull
@@ -29,9 +27,6 @@ public class UsersDTO {
 	private int followersCount;		//maybe set default to 0
 	private boolean enabled;
 
-	//@Pattern(regexp="/^[a-z ,.'-]+$/i")
-	//@Size(min=0,max=44)
-//	private String firstLastName;
 	private String firstName;
 	private String lastName;
 	@PastOrPresent

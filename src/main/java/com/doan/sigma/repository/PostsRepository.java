@@ -10,5 +10,4 @@ import com.doan.sigma.entity.Posts;
 public interface PostsRepository extends CrudRepository<Posts,Integer>{
 
 	List<Posts> findByUsername(@Param("username") String username);
-//	Posts findByPostsIdId(@Param("id") Integer id);
 }

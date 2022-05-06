@@ -13,7 +13,6 @@ public class PostsDTO {
 
 	@NotNull
 	private int id;
-//	private PostsId postsId;
 	
 	@PastOrPresent
 	private Date createdAt;
@@ -27,10 +26,11 @@ public class PostsDTO {
 	@Size(min=0,max=99)
 	private String text;
 	
+	@NotNull
 	private String username;
-	//private Users user;
+	
+	@NotNull
 	private String title;
-//	private String owner;
 
 	private List<Comments> comments;
 

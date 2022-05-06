@@ -26,7 +26,6 @@ import com.doan.sigma.entity.Users;
 import com.doan.sigma.exception.SubException;
 import com.doan.sigma.repository.UsersRepository;
 import com.doan.sigma.security.JwtProvider;
-//import com.doan.sigma.utility.HashingUtility;
 
 @Service
 @Transactional
@@ -46,14 +45,12 @@ public class AuthService {
 	private MailService mailService;
 
 	public String signup(RegisterRequest registerRequest) throws SubException{
-		//added code to see if user already exists
 		boolean isAvail = usersRepo.findById(registerRequest.getEmail().toLowerCase()).isEmpty();
 		if(isAvail) {		//if email is available, create the user and save
 			Users user = new Users();
 			user.setUsername(registerRequest.getUsername());
-			user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));	//might use passwordencoder
+			user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 			user.setEmail(registerRequest.getEmail());
-	//		user.setFirstLastName(registerRequest.getFirstLastName());
 			user.setFirstName(registerRequest.getFirstName());
 			user.setLastName(registerRequest.getLastName());
 			user.setFollowersCount(0);
@@ -72,24 +69,22 @@ public class AuthService {
 		user.setEnabled(true);
 		usersRepo.save(user);
 	}
-	//double check code
+	
 	public AuthenticationResponse login(LoginRequest loginRequest) throws SubException {
 		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
 		String token = jwtProvider.generateToken(authenticate);
 		return new AuthenticationResponse(token,refreshTokenService.generateRefreshToken().getToken(),Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()),loginRequest.getUsername());
-//		return new AuthenticationResponse(token, loginRequest.getUsername());	//this was when response was just token + username
 	}
 	
 	public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) throws SubException{	
 		refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-//		refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());//should remove the old token when refreshing it was this line that fucked up my refreshtokens
 		String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
 		return new AuthenticationResponse(token,
 				refreshTokenRequest.getRefreshToken(),
 				Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()),
 				refreshTokenRequest.getUsername());
-	}//fixed refreshtokenService to refreshtokenRequest line 86
+	}
 	
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

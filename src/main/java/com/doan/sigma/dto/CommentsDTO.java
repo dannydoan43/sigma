@@ -9,10 +9,10 @@ import javax.validation.constraints.Size;
 
 public class CommentsDTO {
 	
-	private Integer id;			//what to do here,.....how to get this to autogenerate a value?
+	private Integer id;
 	
 	private Integer postsId;
-	//this user is the user who commented
+	@NotNull
 	private String username;
 	
 	@NotNull

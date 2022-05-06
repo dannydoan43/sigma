@@ -44,7 +44,7 @@ public class CommentsAPI {
 		return new ResponseEntity<List<CommentsDTO>>(commentsService.getCommentsByOwner(username),HttpStatus.OK);
 	}
 	
-	@PostMapping("/addC")	//removed postsid from add
+	@PostMapping("/addC")
 	ResponseEntity<Integer> addCommentToPost(@Valid @RequestBody CommentsDTO commentsDTO) throws SubException {
 		return new ResponseEntity<Integer>(commentsService.addCommentToPost(commentsDTO),HttpStatus.CREATED);
 	}
@@ -54,7 +54,7 @@ public class CommentsAPI {
 		return new ResponseEntity<Integer>(commentsService.updateComment(commentsDTO),HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{id}")	//might have to change back to pathvariable if you get a null value from putting in json
+	@DeleteMapping("/delete/{id}")
 	ResponseEntity<Integer> deleteComment(@PathVariable Integer id) throws SubException {
 		return new ResponseEntity<Integer>(commentsService.deleteComment(id),HttpStatus.OK);
 	}

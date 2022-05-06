@@ -11,5 +11,5 @@ import com.doan.sigma.entity.Users;
 
 @Repository
 public interface UsersRepository extends CrudRepository<Users,String> {
-	Optional<Users> findByUsername(@Param("username") String username);	//replace this with something in MyUserDetailsService?
+	Optional<Users> findByUsername(@Param("username") String username);
 }

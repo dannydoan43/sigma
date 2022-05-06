@@ -1,7 +1,6 @@
 package com.doan.sigma.dto;
 
 import javax.validation.constraints.Email;
-//do i need this class?
 public class FollowersDTO {
 	@Email
 	private String users_email;
